@@ -57,10 +57,31 @@ struct BMP{
     int bitsInBGR = 24;
     int bitsInBGRA = 32;
 
-    // Constructor
+    // Constructors
     BMP(const char *bmpFile){
         read(bmpFile);
     }
+    
+    // Copy Constructor
+    BMP(const BMP& other){
+        fileHeader = other.fileHeader;
+        infoHeader = other.infoHeader;
+        colorHeader = other.colorHeader;
+        data = other.data;
+    }
+
+    // To match rule of Three
+    BMP& operator=(const BMP& other){
+        if (this != &other){
+            fileHeader = other.fileHeader;
+            infoHeader = other.infoHeader;
+            colorHeader = other.colorHeader;
+            data = other.data;
+        }
+        return *this; 
+    }
+
+    ~BMP() = default;
 
     // We will read a bmp, create another instance, modify it and write in another file
     // in this project.
@@ -99,8 +120,7 @@ struct BMP{
                     istream.seekg(padding, std::ios::cur);
                 }
             }
-
-            if (infoHeader.bitCount == bitsInBGRA){
+            else if (infoHeader.bitCount == bitsInBGRA){
                 data.resize(infoHeader.width * infoHeader.height * bitsInBGRA);
                 std::cout << "[DEBUG]: allocating data: " << data.size() << std::endl;
                 // jump ofset data
@@ -111,9 +131,41 @@ struct BMP{
             }
 
         }
-        std::cout << data.data();
     }
-    void modify(const char* bmpFile);
-    void write(const char* bmpFile);
+    // Creates a new bitmap file and write data into it
+    void write(const char* bmpFile){
+        std::ofstream ostream(bmpFile, std::ios::binary | std::ios::out | std::ios::trunc);
+        if (!ostream.is_open()){
+            throw std::runtime_error("Error while creating output file");
+        }
+        else{
+            // writing file header
+            ostream.write(reinterpret_cast<char *>(&fileHeader), sizeof(fileHeader));
+            // writing info header
+            ostream.write(reinterpret_cast<char *>(&infoHeader), sizeof(infoHeader));
+            // jumping offset
+            ostream.seekp(fileHeader.offsetData, std::ios::beg);
+
+            int channels = infoHeader.bitCount / 8;
+            int rowSize = infoHeader.width * channels;
+            std::streamsize padding = ((4 - (rowSize) % 4) % 4);
+            for (int i = 0; i < infoHeader.height; ++i)
+            {
+                ostream.write(reinterpret_cast<char *>(&data[i * rowSize ]), rowSize);
+
+                uint32_t zero = 0;
+                ostream.write(reinterpret_cast<char *>(&zero), padding);
+            }
+            std::cout << "New image generated! " << std::endl;
+        }
+    }
+    
+    // filters
+
+    void toGrayScale(){
+        for (size_t i = 0; i < data.size(); ++i){
+            uint8_t
+        }
+    }
 
 };

@@ -3,7 +3,10 @@
 
 int main()
 {
-    BMP bitmap("lena_color.bmp");
+    BMP originalImage("lena_color.bmp");
+    BMP pseudoNewImage = originalImage;
+    pseudoNewImage.write("newLena.bmp");
+
     std::cout << "Testing lena\n";
 }
 
