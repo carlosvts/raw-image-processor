@@ -56,7 +56,7 @@ struct BMP{
     std::vector<uint8_t> data;
     int bitsInBGR = 24;
     int bitsInBGRA = 32;
-
+    
     // Constructors
     BMP(const char *bmpFile){
         read(bmpFile);
@@ -69,7 +69,7 @@ struct BMP{
         colorHeader = other.colorHeader;
         data = other.data;
     }
-
+    
     // To match rule of Three
     BMP& operator=(const BMP& other){
         if (this != &other){
@@ -80,9 +80,9 @@ struct BMP{
         }
         return *this; 
     }
-
+    
     ~BMP() = default;
-
+    
     // We will read a bmp, create another instance, modify it and write in another file
     // in this project.
     void read(const char* bmpFile)
@@ -129,7 +129,6 @@ struct BMP{
                     istream.read(reinterpret_cast<char *>(&data[i *infoHeader.width * bitsInBGRA]), infoHeader.width * bitsInBGRA);
                 }
             }
-
         }
     }
     // Creates a new bitmap file and write data into it
@@ -145,14 +144,16 @@ struct BMP{
             ostream.write(reinterpret_cast<char *>(&infoHeader), sizeof(infoHeader));
             // jumping offset
             ostream.seekp(fileHeader.offsetData, std::ios::beg);
-
+            
             int channels = infoHeader.bitCount / 8;
+            std::cout << "[DEBUG]: channels: " << channels << '\n';
             int rowSize = infoHeader.width * channels;
             std::streamsize padding = ((4 - (rowSize) % 4) % 4);
+
             for (int i = 0; i < infoHeader.height; ++i)
             {
                 ostream.write(reinterpret_cast<char *>(&data[i * rowSize ]), rowSize);
-
+                
                 uint32_t zero = 0;
                 ostream.write(reinterpret_cast<char *>(&zero), padding);
             }
@@ -163,9 +164,19 @@ struct BMP{
     // filters
 
     void toGrayScale(){
-        for (size_t i = 0; i < data.size(); ++i){
-            uint8_t
+        int channels = infoHeader.bitCount / 8;
+
+        // BGRA
+        for (size_t i = 0; i < data.size(); i += channels){
+            uint8_t blue = data[i];
+            uint8_t green = data[i + 1];
+            uint8_t red = data[i + 2];
+
+            // via CIE 1931 color space
+            uint8_t gray = static_cast<uint8_t>(0.299 * red + 0.587 * green + 0.114 * blue);
+            data[i] = gray;
+            data[i + 1] = gray;
+            data[i + 2] = gray;
         }
     }
-
 };
