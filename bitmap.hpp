@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include <fstream>
 #include <stdexcept>
 
@@ -177,6 +178,25 @@ struct BMP{
             data[i] = gray;
             data[i + 1] = gray;
             data[i + 2] = gray;
+        }
+    }
+
+    void toSepia(){
+        int channels = infoHeader.bitCount / 8;
+        
+        // BGRA
+        for (size_t i = 0; i < data.size(); i += channels){
+            uint8_t blue = data[i];
+            uint8_t green = data[i + 1];
+            uint8_t red = data[i + 2];
+
+            uint8_t newBlue = std::clamp(static_cast<int>((red * 0.272) + (green * 0.534) + (blue * 0.131)), 0, 255);
+            uint8_t newGreen = std::clamp(static_cast<int>((red * 0.394) + (green * 0.686) + (blue * 0.168)), 0, 255);
+            uint8_t newRed = std::clamp(static_cast<int>((red * 0.393) + (green * 0.769) + (blue * 0.189)), 0, 255);
+            
+            data[i] = newBlue;
+            data[i + 1] = newGreen;
+            data[i + 2] = newRed;
         }
     }
 };
