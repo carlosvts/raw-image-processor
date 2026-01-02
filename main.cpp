@@ -1,8 +1,9 @@
+#include "bitmap.hpp"
 #include <iostream>
-
 
 int main()
 {
-    std::cout << "Hello World! ImageProcessing using neovim!" << std::endl;
+    BMP bitmap("lena_color.bmp");
+    std::cout << "Testing lena\n";
 }
 

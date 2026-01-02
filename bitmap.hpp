@@ -6,6 +6,7 @@
 */
 #pragma once
 #include <cstdint>
+#include <iostream>
 #include <vector>
 #include <fstream>
 #include <stdexcept>
@@ -53,7 +54,8 @@ struct BMP{
     BMPInfoHeader infoHeader;
     BMPColorHeader colorHeader; 
     std::vector<uint8_t> data;
-    bool isValidFile = true; 
+    int bitsInBGR = 24;
+    int bitsInBGRA = 32;
 
     // Constructor
     BMP(const char *bmpFile){
@@ -64,21 +66,52 @@ struct BMP{
     // in this project.
     void read(const char* bmpFile)
     {
+        std::cout << "[DEBUG]: ENTER READ FUNC \n";
         std::ifstream istream(bmpFile, std::ios::binary);
         if (!istream.is_open()){
             throw std::runtime_error("Unable to open this file");
         }
         else{
+            std::cout << "[DEBUG]: ENTER ELSE \n";
             istream.read(reinterpret_cast<char *>(&fileHeader), sizeof(fileHeader));
             if (fileHeader.fileType != BITMAP_FILETYPE){
                 throw std::runtime_error("Unable to read this file: not in a recognizable format.");
             }
             // now cursor is in infoHeader
             istream.read(reinterpret_cast<char *>(&infoHeader), sizeof(infoHeader));
-            // populating our array with the size of bitmap
-            data.resize(infoHeader.width * infoHeader.height);
+            std::cout << "[DEBUG]: readed infoheader \n";
+            // jump ofset data
+            istream.seekg(fileHeader.offsetData, std::ios::beg);
+            std::cout << "[DEBUG]: jumped offset data \n";
+            
+            std::cout << "[DEBUG]: bitCount: " << infoHeader.bitCount << '\n';
+            std::cout << "[DEBUG] sizeof file header: " << sizeof(BMPFileHeader) << '\n';
+            std::cout << "[DEBUG] infoheader.size: " << infoHeader.size << '\n';
+            if (infoHeader.bitCount == bitsInBGR){
+                data.resize(infoHeader.width * infoHeader.height * bitsInBGR);
+                std::cout << "[DEBUG]: allocating data: " << data.size() << std::endl;
+                std::streamsize padding = ((4 - (infoHeader.width * 3) % 4) % 4);
+                // jump ofset data
+                istream.seekg(fileHeader.offsetData, std::ios::beg);
+                for(int i = 0; i < infoHeader.height; ++i){
+                    istream.read(reinterpret_cast<char *>(&data[i * infoHeader.width * bitsInBGR]), infoHeader.width * bitsInBGR);
+                    // jumps padding
+                    istream.seekg(padding, std::ios::cur);
+                }
+            }
+
+            if (infoHeader.bitCount == bitsInBGRA){
+                data.resize(infoHeader.width * infoHeader.height * bitsInBGRA);
+                std::cout << "[DEBUG]: allocating data: " << data.size() << std::endl;
+                // jump ofset data
+                istream.seekg(fileHeader.offsetData, std::ios::beg);
+                for (int i = 0; i < infoHeader.height; ++i){
+                    istream.read(reinterpret_cast<char *>(&data[i *infoHeader.width * bitsInBGRA]), infoHeader.width * bitsInBGRA);
+                }
+            }
 
         }
+        std::cout << data.data();
     }
     void modify(const char* bmpFile);
     void write(const char* bmpFile);
