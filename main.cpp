@@ -23,6 +23,9 @@ int main()
    //pseudoNewImage.toThreshold();
    //pseudoNewImage.write("thresholdLena.bmp");
 
+   pseudoNewImage.sobelEdgeDetector();
+   pseudoNewImage.write("sobelLena.bmp");
+
     std::cout << "Testing lena\n";
 }
 

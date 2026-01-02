@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <iostream>
 #include <vector>
+#include <cmath>
 #include <algorithm>
 #include <fstream>
 #include <stdexcept>
@@ -269,5 +270,49 @@ struct BMP{
         }
         data = tmp;
     }
-    
+
+    void sobelEdgeDetector(){
+        int channels = infoHeader.bitCount / 8;
+        std::vector<uint8_t> tmp = data;
+
+        // Grayscale
+        this->toGrayScale();
+
+        // Source: https://en.wikipedia.org/wiki/Sobel_operator
+        float Gx [3][3] = {
+            { -1, 0, 1 },
+            { -2, 0, 2 },
+            { -1, 0, 1 }
+        };
+        float Gy [3][3] = {
+            { -1, -2, -1 },
+            {  0,  0,  0 },
+            {  1,  2,  1 }
+        };
+
+        // image loop
+        for(int i = 1; i < infoHeader.height - 1; ++i){
+            for(int j = 1; j < infoHeader.width - 1; ++j){
+                float accumulatorX = 0;
+                float accumulatorY = 0;
+
+                // kernel convolution
+                for(int ky = -1; ky <= 1; ky++){
+                    for(int kx = -1; kx <= 1; kx++){
+                        int neighborIndex = ((i + ky) * infoHeader.width + (j + kx)) * channels;
+                        accumulatorX += data.at(neighborIndex) * Gx[ky + 1][kx + 1];
+                        accumulatorY += data.at(neighborIndex) * Gy[ky + 1][kx + 1];
+                    }
+                }
+                int currentPixelIndex = (i * infoHeader.width + j) * channels;
+                int computedGradient = std::sqrt(std::pow(accumulatorX, 2) + std::pow(accumulatorY, 2));
+                uint8_t edge = static_cast<uint8_t>(std::clamp(computedGradient, 0, 255));
+                tmp[currentPixelIndex] = edge;
+                tmp[currentPixelIndex + 1] = edge;
+                tmp[currentPixelIndex + 2] = edge;
+
+            }
+        }
+        data = tmp;
+    }
 };
