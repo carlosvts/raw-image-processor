@@ -162,6 +162,13 @@ struct BMP{
         }
     }
     
+    // for threshold filter
+    // calculates a treshhold of a channel 
+    uint8_t calculateThreshold(uint8_t gray){
+        const int limit = 127;
+        return 255 ? gray >= limit : 0;
+    }
+    
     // filters
 
     void toGrayScale(){
@@ -199,4 +206,32 @@ struct BMP{
             data[i + 2] = newRed;
         }
     }
+
+    void toNegative(){
+        int channels = infoHeader.bitCount / 8;
+
+        for (size_t i = 0; i < data.size(); i+= channels){
+            data[i] = 255 - data[i];
+            data[i + 1] = 255 - data[i + 1];
+            data[i+ 2] = 255 - data[i + 2];
+        }
+    }
+
+    void toThreshold(){
+        int channels = infoHeader.bitCount / 8;
+
+        for (size_t i = 0; i < data.size(); i+= channels){
+            uint8_t blue = data[i];
+            uint8_t green = data[i + 1];
+            uint8_t red = data[i + 2];
+
+            // via CIE 1931 color space
+            uint8_t gray = static_cast<uint8_t>(0.299 * red + 0.587 * green + 0.114 * blue);
+            
+            data[i] = calculateThreshold(gray);
+            data[i + 1] = calculateThreshold(gray);
+            data[i + 2] = calculateThreshold(gray);
+        }
+    }
+    
 };
