@@ -233,5 +233,41 @@ struct BMP{
             data[i + 2] = calculateThreshold(gray);
         }
     }
+
+    void applyGausianBlur(){
+        int channels = infoHeader.bitCount / 8;
+        std::vector<uint8_t> tmp = data;
+        // kernel [ky][kx]
+        float kernel[3][3] = {
+            { 1/16.0f, 2/16.0f, 1/16.0f },
+            { 2/16.0f, 4/16.0f, 2/16.0f },
+            { 1/16.0f, 2/16.0f, 1/16.0f }
+        };
+
+        // loop through image
+        for(int i = 1; i < infoHeader.height - 1; ++i){
+            for(int j = 1; j < infoHeader.width - 1; ++j){
+                // loop in each channel
+                for(int c = 0; c < 3; ++c){
+                    float accumulator = 0.0f;
+
+                    // applying convolution kernel
+                    for(int ky = -1; ky <= 1; ++ky){
+                    
+                        for(int kx = -1; kx <=1; ++kx){
+                            int neighborIndex = ((i + ky) * infoHeader.width + (j + kx)) * channels + c;
+                            float weight = kernel[ky + 1][kx + 1];
+                            accumulator += data[neighborIndex] * weight;
+                        }
+                    
+                    }
+
+                int currentPixelIndex = (i * infoHeader.width + j) * channels + c;
+                tmp[currentPixelIndex] = static_cast<uint8_t>(accumulator);
+                }
+            }
+        }
+        data = tmp;
+    }
     
 };

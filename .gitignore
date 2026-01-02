@@ -1,7 +1,7 @@
 imageprocess
 imageprocess
 main
-newLena.bmp
+*.bmp
 
 # Prerequisites
 *.d
