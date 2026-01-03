@@ -87,12 +87,16 @@ Example: ./imageproc lena.bmp edge output.bmp
 └── 📁 assets/         # Project screenshots and demo results
 ```
 
-# Resourcers
+# Resources
 Here are some resources that I have used for this project to be able to work
 [Técnicas básicas para Processamento de Imagens e Visão Computacional](http://www.lps.usp.br/hae/apostila/basico-ead.pdf)
+
 [Solarian Programmer - C++ reading and writing BMP images](https://solarianprogrammer.com/2018/11/19/cpp-reading-writing-bmp-images/)
-[Gausian Blur](https://en.wikipedia.org/wiki/Gaussian_blur)
-[Convolution Kernel](https://en.wikipedia.org/wiki/Kernel_(image_processing))
+
+[Gausian Blur - Wikipedia](https://en.wikipedia.org/wiki/Gaussian_blur)
+
+[Convolution Kernel - Wikipedia](https://en.wikipedia.org/wiki/Kernel_(image_processing))
+
 [C++ Libraries and methods](https://cplusplus.com/reference/)
 
 # Reminder
