@@ -89,30 +89,22 @@ struct BMP{
     // in this project.
     void read(const char* bmpFile)
     {
-        std::cout << "[DEBUG]: ENTER READ FUNC \n";
         std::ifstream istream(bmpFile, std::ios::binary);
         if (!istream.is_open()){
             throw std::runtime_error("Unable to open this file");
         }
         else{
-            std::cout << "[DEBUG]: ENTER ELSE \n";
             istream.read(reinterpret_cast<char *>(&fileHeader), sizeof(fileHeader));
             if (fileHeader.fileType != BITMAP_FILETYPE){
                 throw std::runtime_error("Unable to read this file: not in a recognizable format.");
             }
             // now cursor is in infoHeader
             istream.read(reinterpret_cast<char *>(&infoHeader), sizeof(infoHeader));
-            std::cout << "[DEBUG]: readed infoheader \n";
             // jump ofset data
             istream.seekg(fileHeader.offsetData, std::ios::beg);
-            std::cout << "[DEBUG]: jumped offset data \n";
             
-            std::cout << "[DEBUG]: bitCount: " << infoHeader.bitCount << '\n';
-            std::cout << "[DEBUG] sizeof file header: " << sizeof(BMPFileHeader) << '\n';
-            std::cout << "[DEBUG] infoheader.size: " << infoHeader.size << '\n';
             if (infoHeader.bitCount == bitsInBGR){
                 data.resize(infoHeader.width * infoHeader.height * bitsInBGR);
-                std::cout << "[DEBUG]: allocating data: " << data.size() << std::endl;
                 std::streamsize padding = ((4 - (infoHeader.width * 3) % 4) % 4);
                 // jump ofset data
                 istream.seekg(fileHeader.offsetData, std::ios::beg);
@@ -124,7 +116,6 @@ struct BMP{
             }
             else if (infoHeader.bitCount == bitsInBGRA){
                 data.resize(infoHeader.width * infoHeader.height * bitsInBGRA);
-                std::cout << "[DEBUG]: allocating data: " << data.size() << std::endl;
                 // jump ofset data
                 istream.seekg(fileHeader.offsetData, std::ios::beg);
                 for (int i = 0; i < infoHeader.height; ++i){
@@ -148,7 +139,6 @@ struct BMP{
             ostream.seekp(fileHeader.offsetData, std::ios::beg);
             
             int channels = infoHeader.bitCount / 8;
-            std::cout << "[DEBUG]: channels: " << channels << '\n';
             int rowSize = infoHeader.width * channels;
             std::streamsize padding = ((4 - (rowSize) % 4) % 4);
 
