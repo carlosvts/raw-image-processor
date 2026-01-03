@@ -18,13 +18,13 @@ int main()
   // pseudoNewImage.write("sepiaLena.bmp");
 
    //pseudoNewImage.toNegative();
-   // pseudoNewImage.write("negativeLena.bmp");
+   //pseudoNewImage.write("negativeNaif.bmp");
 
    //pseudoNewImage.toThreshold();
    //pseudoNewImage.write("thresholdLena.bmp");
 
-   pseudoNewImage.sobelEdgeDetector();
-   pseudoNewImage.write("sobelLena.bmp");
+   //pseudoNewImage.sobelEdgeDetector();
+   //pseudoNewImage.write("sobelLena.bmp");
 
     std::cout << "Testing lena\n";
 }
