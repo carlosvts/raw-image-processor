@@ -1,5 +1,7 @@
 # Raw BMP Image Processor in C++
 
+A zero-dependency C++ image processor for handling bitmaps (.bmp)
+
 ![C++](https://img.shields.io/badge/c++-%2300599C.svg?style=for-the-badge&logo=c%2B%2B&logoColor=white)
 ![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
 ![Graphics](https://img.shields.io/badge/Graphics-Image--Processing-orange)
@@ -89,6 +91,7 @@ Example: ./imageproc lena.bmp edge output.bmp
 
 # Resources
 Here are some resources that I have used for this project to be able to work
+
 [Técnicas básicas para Processamento de Imagens e Visão Computacional](http://www.lps.usp.br/hae/apostila/basico-ead.pdf)
 
 [Solarian Programmer - C++ reading and writing BMP images](https://solarianprogrammer.com/2018/11/19/cpp-reading-writing-bmp-images/)
