@@ -10,9 +10,9 @@
 | :---: | :---: | :---: |
 | <img src="assets/lena_color.bmp" width="200"> | <img src="assets/sobelLena.bmp" width="200"> | <img src="assets/lenaBlur.bmp" width="200"> |
 
-| Sepia Tone | Grayscale | Threshold | Negative
+| Sepia Tone | Grayscale | Negative |
 | :---: | :---: | :---: |
-| <img src="assets/sepiaLena.bmp" width="200"> | <img src="assets/grayLena.bmp" width="200"> | <img src="assets/thresholdLena.bmp" width="200"> | <img src="assets/negativeLena.bmp>
+| <img src="assets/sepiaLena.bmp" width="200"> | <img src="assets/grayLena.bmp" width="200"> | <img src="assets/negativeLena.bmp" width="200"> |
 
 ---
 
