@@ -16,7 +16,7 @@
 
 ---
 
-A low-level image processing engine developed in C++ inspired by the principles of [**TheCherno**](https://www.youtube.com/@TheCherno). This project explores binary file manipulation, the internal structure of the BMP (Bitmap) format, and the implementation of mathematical kernels for computer vision.
+A low-level image processing engine developed in C++. This project explores binary file manipulation, the internal structure of the BMP (Bitmap) format, and the implementation of mathematical kernels for computer vision.
 
 ## About the Project
 
